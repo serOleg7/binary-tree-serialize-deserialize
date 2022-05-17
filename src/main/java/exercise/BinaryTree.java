@@ -1,8 +1,13 @@
 package exercise;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@Getter
+@Setter
 public class BinaryTree {
     private static final Set<String> trees = new HashSet<>();
     private final String name;
@@ -16,15 +21,6 @@ public class BinaryTree {
         this.right = right;
     }
 
-    // For unit test only
-    void setLeft(BinaryTree left) {
-        this.left = left;
-    }
-
-    // For unit test only
-    void setRight(BinaryTree right) {
-        this.right = right;
-    }
 
     public static boolean EQ(BinaryTree tree1, BinaryTree tree2) {
         if (tree1 == null && tree2 == null) return true;
@@ -33,17 +29,14 @@ public class BinaryTree {
         return EQ(tree1.getLeft(), tree2.getLeft()) && EQ(tree1.getRight(), tree2.getRight());
     }
 
-    public String getName() {
-        return name;
+
+    /**
+     * @return a string representation of BinaryTree
+     */
+    public String serializeTree() {
+        return serializeTreeInternal(this, new Stack<>());
     }
 
-    public BinaryTree getLeft() {
-        return left;
-    }
-
-    public BinaryTree getRight() {
-        return right;
-    }
 
     /**
      * @param tree input tree to serialize
@@ -69,10 +62,12 @@ public class BinaryTree {
 
 
     /**
-     * @return a string representation of BinaryTree
+     * @param str byte array holding the string's bytes
+     * @return a binaryTree
      */
-    public String serializeTree() {
-        return serializeTreeInternal(this, new Stack<>());
+    public static BinaryTree deserializeTree(String str) {
+        //    if (str == null) throw new NullPointerException("Can't deserialize null");
+        return deserializeTreeInternal(str.getBytes(), 0);
     }
 
 
@@ -95,16 +90,6 @@ public class BinaryTree {
         if (nameTree.equals("#"))
             return null;
         return new BinaryTree(nameTree, deserializeHelper(namesList), deserializeHelper(namesList));
-    }
-
-
-    /**
-     * @param str byte array holding the string's bytes
-     * @return a binaryTree
-     */
-    public static BinaryTree deserializeTree(String str) {
-    //    if (str == null) throw new NullPointerException("Can't deserialize null");
-        return deserializeTreeInternal(str.getBytes(), 0);
     }
 
 }
